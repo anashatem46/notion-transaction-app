@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Transaction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 32px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .toggle-option.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .toggle-option.expense.active {
+            background: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .toggle-option.income.active {
+            background: #10b981;
+            border-color: #10b981;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+
+        .status.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Transaction</h1>
+        
+        <form id="transactionForm">
+            <div class="form-group">
+                <label for="name">Transaction Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" required placeholder="e.g., Grocery shopping">
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount <span class="required">*</span></label>
+                <input type="number" id="amount" name="amount" step="0.01" min="0" required placeholder="0.00">
+            </div>
+
+            <div class="form-group">
+                <label>Transaction Type <span class="required">*</span></label>
+                <div class="toggle-group">
+                    <div class="toggle-option expense active" data-type="Expense">
+                        💸 Expense
+                    </div>
+                    <div class="toggle-option income" data-type="Income">
+                        💰 Income
+                    </div>
+                </div>
+                <input type="hidden" id="type" name="type" value="Expense">
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date <span class="required">*</span></label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="account">Account <span class="required">*</span></label>
+                <select id="account" name="account" required>
+                    <option value="">Loading accounts...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category <span class="required">*</span></label>
+                <select id="category" name="category" required>
+                    <option value="">Loading categories...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="note">Note (Optional)</label>
+                <textarea id="note" name="note" placeholder="Add any additional details..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">Save</button>
+        </form>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Toggle type selection
+        const toggleOptions = document.querySelectorAll('.toggle-option');
+        const typeInput = document.getElementById('type');
+
+        toggleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                toggleOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                typeInput.value = option.dataset.type;
+            });
+        });
+
+        // Load categories on page load
+        async function loadCategories() {
+            const categorySelect = document.getElementById('category');
+            
+            try {
+                const response = await fetch('/categories');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load categories');
+                }
+                
+                const categories = await response.json();
+                
+                categorySelect.innerHTML = '<option value="">Select a category</option>';
+                
+                categories.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = cat.name;
+                    categorySelect.appendChild(option);
+                });
+            } catch (error) {
+                categorySelect.innerHTML = '<option value="">Error loading categories</option>';
+                showStatus('Failed to load categories. Please refresh the page.', 'error');
+            }
+        }
+
+        // Load accounts on page load
+        async function loadAccounts() {
+            const accountSelect = document.getElementById('account');
+            
+            try {
+                const response = await fetch('/accounts');
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    // Check for specific error types
+                    if (errorData.error && errorData.error.includes('Invalid')) {
+                        throw new Error(errorData.details + (errorData.hint ? ' ' + errorData.hint : ''));
+                    }
+                    throw new Error(errorData.error || 'Failed to load accounts');
+                }
+                
+                const accounts = await response.json();
+                
+                if (accounts.length === 0) {
+                    accountSelect.innerHTML = '<option value="">No accounts found</option>';
+                    showStatus('No accounts found in your Notion database. Please add some accounts first.', 'error');
+                    return;
+                }
+                
+                accountSelect.innerHTML = '<option value="">Select an account</option>';
+                
+                accounts.forEach(acc => {
+                    const option = document.createElement('option');
+                    option.value = acc.id;
+                    option.textContent = acc.name;
+                    accountSelect.appendChild(option);
+                });
+            } catch (error) {
+                accountSelect.innerHTML = '<option value="">Error loading accounts</option>';
+                showStatus('Failed to load accounts: ' + error.message, 'error');
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type} show`;
+            
+            setTimeout(() => {
+                statusDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // Handle form submission
+        document.getElementById('transactionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
+            
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                amount: parseFloat(document.getElementById('amount').value),
+                type: document.getElementById('type').value,
+                date: document.getElementById('date').value,
+                account: document.getElementById('account').value,
+                category: document.getElementById('category').value,
+                note: document.getElementById('note').value.trim()
+            };
+            
+            try {
+                const response = await fetch('/transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Transaction saved successfully! ✓', 'success');
+                    
+                    // Clear form but keep date and type
+                    document.getElementById('name').value = '';
+                    document.getElementById('amount').value = '';
+                    document.getElementById('account').value = '';
+                    document.getElementById('category').value = '';
+                    document.getElementById('note').value = '';
+                } else {
+                    // Show detailed error message
+                    let errorMsg = result.error || 'Failed to save transaction';
+                    if (result.details) {
+                        errorMsg += ': ' + result.details;
+                    }
+                    if (result.hint) {
+                        errorMsg += ' (' + result.hint + ')';
+                    }
+                    throw new Error(errorMsg);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Save';
+            }
+        });
+
+        // Load categories and accounts when page loads
+        loadCategories();
+        loadAccounts();
+    </script>
+</body>
+</html>
