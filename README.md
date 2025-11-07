@@ -26,7 +26,7 @@ npm install
 Or if you prefer to install manually:
 
 ```bash
-npm install express @notionhq/client dotenv
+npm install express @notionhq/client dotenv express-session bcrypt
 ```
 
 ### 2. Notion Setup
@@ -91,6 +91,11 @@ NOTION_TRANSACTIONS_DB_ID=your_transactions_database_id_here
 NOTION_CATEGORIES_DB_ID=your_categories_database_id_here
 NOTION_ACCOUNTS_DB_ID=your_accounts_database_id_here
 
+# Authentication
+SESSION_SECRET=replace_with_strong_random_secret
+APP_USERNAME=your_username_here
+APP_PASSWORD_HASH=your_bcrypt_password_hash_here
+
 # Server Configuration
 PORT=3000
 ```
@@ -99,6 +104,13 @@ PORT=3000
 - Replace all placeholder values with your actual Notion API key and database IDs
 - The `NOTION_CATEGORIES_DB_ID` is optional - if not provided, it will use the `NOTION_TRANSACTIONS_DB_ID`
 - Never commit your `.env` file to version control
+- Generate your password hash once using Node:
+
+  ```bash
+  node -e "const bcrypt = require('bcrypt'); bcrypt.hash('yourPassword', 12).then(console.log)"
+  ```
+
+  Copy the resulting hash into `APP_PASSWORD_HASH`.
 
 ### 5. Get Notion API Key
 
@@ -127,6 +139,15 @@ http://localhost:3000
 
 The app will be available at the specified port (default: 3000).
 
+3. You'll be redirected to the login page. Sign in with the username/password you configured in `.env`.
+
+## Authentication
+
+- The application is protected by a simple session-based login layer.
+- Credentials are defined via `APP_USERNAME` and `APP_PASSWORD_HASH`.
+- Sessions last for one hour; you can click **Log Out** in the UI to end the session immediately.
+- When the session expires, API calls will return `401 Unauthorized` and the browser will redirect to `/login`.
+
 ## Project Structure
 
 ```
@@ -139,7 +160,8 @@ notion/
 │   ├── transactions.js    # Transactions API routes
 │   └── health.js           # Health check route
 ├── public/
-│   └── index.html          # Frontend application
+│   ├── index.html          # Authenticated transaction form
+│   └── login.html          # Login page
 ├── server.js               # Main server entry point
 ├── package.json            # Dependencies and scripts
 ├── README.md               # Documentation
@@ -148,7 +170,9 @@ notion/
 
 ## Usage
 
-1. Fill in the transaction form:
+1. Sign in using your credentials at `/login`.
+
+2. Fill in the transaction form:
    - **Transaction Name**: Enter a descriptive name
    - **Amount**: Enter the transaction amount
    - **Transaction Type**: Toggle between Expense and Income
@@ -157,9 +181,9 @@ notion/
    - **Category**: Select a category from the dropdown (required)
    - **Note**: Add any additional details (optional)
 
-2. Click "Save" to create the transaction in Notion
+3. Click "Save" to create the transaction in Notion
 
-3. The form will clear (except for date and type) and show a success message
+4. Use the **Log Out** button when you're done to end your session
 
 ## API Endpoints
 

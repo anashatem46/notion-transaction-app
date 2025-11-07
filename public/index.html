@@ -30,6 +30,29 @@
             padding: 32px;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .btn-logout {
+            border: none;
+            background: #ef4444;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .btn-logout:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
         h1 {
             color: #333;
             font-size: 28px;
@@ -192,6 +215,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="top-bar">
+            <button type="button" class="btn-logout" id="logoutBtn">Log Out</button>
+        </div>
         <h1>Add Transaction</h1>
         
         <form id="transactionForm">
@@ -394,6 +420,26 @@
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Save';
+            }
+        });
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to log out');
+                }
+
+                window.location.href = '/login';
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
             }
         });
 
