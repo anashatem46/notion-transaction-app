@@ -22,6 +22,11 @@ if (!SESSION_SECRET || !APP_USERNAME || !APP_PASSWORD_HASH) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Behind a proxy (e.g., Railway), trust the first proxy so req.secure reflects HTTPS
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+}
+
 app.use(session({
     name: 'notion_session',
     secret: SESSION_SECRET || 'fallback-secret',
@@ -110,8 +115,13 @@ app.use('/accounts', requireAuth, accountsRoutes);
 app.use('/transaction', requireAuth, transactionsRoutes);
 app.use('/health', healthRoutes);
 
+// Silence favicon 404 noise
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-    console.log(`Access the app at http://localhost:${PORT}`);
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(`Access the app at http://localhost:${PORT}`);
+    }
 });
