@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3000;
 const categoriesRoutes = require('./routes/categories');
 const accountsRoutes = require('./routes/accounts');
 const transactionsRoutes = require('./routes/transactions');
+const balanceRoutes = require('./routes/balance');
+const recentTransactionsRoutes = require('./routes/recent-transactions');
 const healthRoutes = require('./routes/health');
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
@@ -113,6 +115,8 @@ app.use('/public', requireAuth, express.static(path.join(__dirname, 'public')));
 app.use('/categories', requireAuth, categoriesRoutes);
 app.use('/accounts', requireAuth, accountsRoutes);
 app.use('/transaction', requireAuth, transactionsRoutes);
+app.use('/balance', requireAuth, balanceRoutes);
+app.use('/recent-transactions', requireAuth, recentTransactionsRoutes);
 app.use('/health', healthRoutes);
 
 // Silence favicon 404 noise
