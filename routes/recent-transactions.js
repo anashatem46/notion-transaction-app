@@ -2,6 +2,22 @@ const express = require('express');
 const router = express.Router();
 const { notion, TRANSACTIONS_DB_ID } = require('../config/notion');
 
+// Helper function to fetch all pages from a Notion query
+async function fetchAllPages(queryFn) {
+    const allResults = [];
+    let hasMore = true;
+    let startCursor = undefined;
+
+    while (hasMore) {
+        const response = await queryFn(startCursor);
+        allResults.push(...response.results);
+        hasMore = response.has_more;
+        startCursor = response.next_cursor || undefined;
+    }
+
+    return allResults;
+}
+
 // GET /recent-transactions - Get 5 most recent transactions
 router.get('/', async (req, res) => {
     try {
