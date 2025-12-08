@@ -207,34 +207,40 @@ function App() {
         }, 5000);
     };
 
-    return React.createElement('div', { className: 'container' }, [
+    return React.createElement('div', { 
+        className: 'bg-white rounded-2xl shadow-lg border border-gray-100 max-w-lg w-full p-6 md:p-8' 
+    }, [
         React.createElement('div', {
             key: 'header',
-            className: 'header'
+            className: 'flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6'
         }, [
-            React.createElement('h1', { key: 'title' }, 'Add Transaction'),
+            React.createElement('h1', { 
+                key: 'title',
+                className: 'text-gray-800 text-2xl md:text-3xl font-bold m-0'
+            }, 'Add Transaction'),
             React.createElement('button', {
                 key: 'logout',
                 type: 'button',
-                className: 'logout-btn',
-                id: 'logoutBtn',
+                className: 'bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200',
                 onClick: handleLogout
             }, 'Log Out')
         ]),
         React.createElement('div', {
             key: 'balance',
-            className: 'balance-section'
+            className: 'mb-6'
         }, [
             React.createElement('div', {
                 key: 'balance-header',
-                className: 'balance-header'
+                className: 'flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4'
             }, [
-                React.createElement('h2', { key: 'title' }, 'Balance'),
+                React.createElement('h2', { 
+                    key: 'title',
+                    className: 'text-gray-800 text-xl font-semibold m-0'
+                }, 'Balance'),
                 React.createElement('button', {
                     key: 'customize',
                     type: 'button',
-                    className: 'customize-btn',
-                    id: 'customizeBtn',
+                    className: 'bg-primary hover:bg-primary-light text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 text-xs',
                     onClick: handleCustomizeClick
                 }, 'Customize')
             ]),
