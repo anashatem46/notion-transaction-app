@@ -18,7 +18,14 @@ function TransactionForm({
     });
 
     const handleChange = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        setFormData(prev => {
+            const updated = { ...prev, [field]: value };
+            // Clear category when switching from Expense to Income
+            if (field === 'type' && value === 'Income' && prev.type === 'Expense') {
+                updated.category = '';
+            }
+            return updated;
+        });
     };
 
     const handleSubmit = (e) => {
@@ -183,15 +190,21 @@ function TransactionForm({
                 key: 'label',
                 htmlFor: 'category',
                 className: 'block text-gray-600 font-semibold mb-2 text-sm'
-            }, ['Category ', React.createElement('span', {
-                key: 'required',
-                className: 'text-red-500'
-            }, '*')]),
+            }, [
+                'Category ',
+                formData.type === 'Expense' ? React.createElement('span', {
+                    key: 'required',
+                    className: 'text-red-500'
+                }, '*') : React.createElement('span', {
+                    key: 'optional',
+                    className: 'text-gray-400 text-xs font-normal'
+                }, '(Optional)')
+            ]),
             React.createElement('select', {
                 key: 'select',
                 id: 'category',
                 name: 'category',
-                required: true,
+                required: formData.type === 'Expense',
                 className: 'w-full border-2 border-gray-200 focus:border-accent focus:outline-none rounded-lg px-4 py-3 text-base',
                 value: formData.category,
                 onChange: (e) => handleChange('category', e.target.value)
@@ -199,7 +212,7 @@ function TransactionForm({
                 React.createElement('option', {
                     key: 'default',
                     value: ''
-                }, categories.length === 0 ? 'Loading categories...' : 'Select a category'),
+                }, categories.length === 0 ? 'Loading categories...' : (formData.type === 'Income' ? 'Select a category (optional)' : 'Select a category')),
                 ...categories.map(cat => React.createElement('option', {
                     key: cat.id,
                     value: cat.id

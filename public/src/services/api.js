@@ -46,7 +46,10 @@ class ApiService {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ error: 'Request failed' }));
-                throw new Error(errorData.error || errorData.details || 'Request failed');
+                const errorMessage = errorData.details || errorData.error || 'Request failed';
+                const error = new Error(errorMessage);
+                error.responseData = errorData;
+                throw error;
             }
 
             return await response.json();
@@ -87,7 +90,14 @@ class ApiService {
      * Create a transaction
      */
     async createTransaction(transactionData) {
-        return this.post(API_ENDPOINTS.TRANSACTION, transactionData);
+        console.log('API Service - Sending transaction data:', transactionData);
+        try {
+            const result = await this.post(API_ENDPOINTS.TRANSACTION, transactionData);
+            return result;
+        } catch (error) {
+            console.error('API Service - Transaction error:', error);
+            throw error;
+        }
     }
 
     /**

@@ -5,8 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Transaction</title>
     
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS CDN with custom configuration -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#1B3C53',
+                            dark: '#0f2635',
+                            light: '#234C6A',
+                        },
+                        secondary: '#234C6A',
+                        accent: '#456882',
+                        'light-gray': '#E3E3E3',
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- Custom Tailwind Colors and Animations -->
     <link rel="stylesheet" href="/public/src/tailwind-custom.css">
@@ -21,10 +39,28 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #E3E3E3 !important;
+        }
+        
+        /* Ensure custom colors work */
+        .bg-primary {
+            background-color: #1B3C53 !important;
+        }
+        
+        .bg-primary-light {
+            background-color: #234C6A !important;
+        }
+        
+        .bg-light-gray {
+            background-color: #E3E3E3 !important;
+        }
+        
+        .hover\:bg-primary-light:hover {
+            background-color: #234C6A !important;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-primary to-secondary min-h-screen p-5 flex justify-center items-center">
+<body class="bg-light-gray min-h-screen p-5 flex justify-center items-center">
     <div id="root"></div>
 
     <!-- React and ReactDOM from CDN -->

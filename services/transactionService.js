@@ -8,16 +8,56 @@ const { ERROR_MESSAGES } = require('../constants/errors');
 async function createTransaction(transactionData) {
     const { name, amount, type, date, account, category, note } = transactionData;
 
-    // Validate required fields
-    if (!name || amount === undefined || !type || !date || !account || !category) {
-        const missingFields = [];
-        if (!name) missingFields.push('name');
-        if (amount === undefined) missingFields.push('amount');
-        if (!type) missingFields.push('type');
-        if (!date) missingFields.push('date');
-        if (!account) missingFields.push('account');
-        if (!category) missingFields.push('category');
+    // Validate required fields - category is only required for expenses
+    let missingFields = [];
+    if (!name || name.trim() === '') missingFields.push('name');
+    if (amount === undefined || amount === null) missingFields.push('amount');
+    if (!type || type.trim() === '') missingFields.push('type');
+    if (!date || date.trim() === '') missingFields.push('date');
+    if (!account || account.trim() === '') missingFields.push('account');
+    
+    // Category is required only for expenses, NOT for income
+    // Be very explicit: if it contains "income", it's income and category is optional
+    const typeString = type ? String(type).trim() : '';
+    const transactionType = typeString.toLowerCase();
+    const isIncome = transactionType === 'income' || transactionType.includes('income');
+    const isExpense = (transactionType === 'expense' || transactionType.includes('expense')) && !isIncome;
+    
+    console.log('Service validation - Transaction type check:', {
+        originalType: type,
+        normalizedType: transactionType,
+        isIncome: isIncome,
+        isExpense: isExpense,
+        categoryProvided: !!category,
+        categoryValue: category
+    });
+    
+    // ONLY require category for expenses (not for income)
+    // If it's income, NEVER require category - skip validation entirely
+    if (isIncome) {
+        // Income transactions - category is always optional
+        console.log('Service: Income transaction detected - category is optional, skipping validation');
+    } else if (isExpense) {
+        // Expense transactions - category is required
+        if (!category || (typeof category === 'string' && category.trim() === '')) {
+            missingFields.push('category');
+            console.log('Service: Missing category for expense transaction');
+        } else {
+            console.log('Service: Category provided for expense transaction');
+        }
+    } else {
+        // Unknown transaction type - category is optional
+        console.log('Service: Unknown transaction type - category is optional, skipping validation');
+    }
 
+    // Final safeguard: if it's income, remove category from missingFields if it's there
+    if (isIncome && missingFields.includes('category')) {
+        console.log('Service: Removing category from missingFields for income transaction');
+        missingFields = missingFields.filter(field => field !== 'category');
+    }
+    
+    if (missingFields.length > 0) {
+        console.log('Service: Validation failed with missing fields:', missingFields);
         throw {
             code: 'VALIDATION_ERROR',
             ...ERROR_MESSAGES.MISSING_REQUIRED_FIELDS(missingFields)
@@ -78,13 +118,17 @@ async function createTransaction(transactionData) {
             relation: [{
                 id: account
             }]
-        },
-        [properties.category]: {
+        }
+    };
+
+    // Add category only if provided (required for expenses, optional for income)
+    if (category && category.trim() !== '') {
+        pageProperties[properties.category] = {
             relation: [{
                 id: category
             }]
-        }
-    };
+        };
+    }
 
     // Add note if provided
     if (note && note.trim()) {

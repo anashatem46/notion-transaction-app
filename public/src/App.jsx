@@ -134,15 +134,59 @@ function App() {
     const handleTransactionSubmit = async (formData) => {
         setIsLoading(true);
         try {
-            await apiService.createTransaction({
+            // Validate required fields on frontend first
+            const errors = [];
+            if (!formData.name || formData.name.trim() === '') {
+                errors.push('Transaction name is required');
+            }
+            if (!formData.amount || isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
+                errors.push('Amount is required and must be greater than 0');
+            }
+            if (!formData.type || formData.type.trim() === '') {
+                errors.push('Transaction type is required');
+            }
+            if (!formData.date || formData.date.trim() === '') {
+                errors.push('Date is required');
+            }
+            if (!formData.account || formData.account.trim() === '') {
+                errors.push('Account is required');
+            }
+            
+            // Category is required only for expenses
+            const isExpense = formData.type && formData.type.toLowerCase().includes('expense');
+            if (isExpense && (!formData.category || formData.category.trim() === '')) {
+                errors.push('Category is required for expense transactions');
+            }
+
+            if (errors.length > 0) {
+                showStatus(`Error: ${errors.join(', ')}`, 'error');
+                setIsLoading(false);
+                return;
+            }
+
+            // Prepare transaction data
+            const transactionData = {
                 name: formData.name.trim(),
                 amount: parseFloat(formData.amount),
-                type: formData.type,
-                date: formData.date,
-                account: formData.account,
-                category: formData.category,
-                note: formData.note.trim()
-            });
+                type: formData.type.trim(),
+                date: formData.date.trim(),
+                account: formData.account.trim()
+            };
+
+            // Only include note if it has content
+            if (formData.note && formData.note.trim()) {
+                transactionData.note = formData.note.trim();
+            }
+
+            // Only include category if it's provided (required for expenses, optional for income)
+            if (formData.category && formData.category.trim()) {
+                transactionData.category = formData.category.trim();
+            }
+
+            // Debug logging
+            console.log('Submitting transaction:', transactionData);
+
+            await apiService.createTransaction(transactionData);
 
             showStatus('Transaction saved successfully! ✓', 'success');
             
@@ -150,7 +194,16 @@ function App() {
             loadBalances();
             loadRecentTransactions();
         } catch (error) {
-            showStatus(`Error: ${error.message}`, 'error');
+            console.error('Transaction submission error:', error);
+            console.error('Error response data:', error.responseData);
+            // Show more detailed error message
+            let errorMessage = error.message;
+            if (error.responseData && error.responseData.details) {
+                errorMessage = error.responseData.details;
+            } else if (error.responseData && error.responseData.error) {
+                errorMessage = error.responseData.error;
+            }
+            showStatus(`Error: ${errorMessage}`, 'error');
         } finally {
             setIsLoading(false);
         }
