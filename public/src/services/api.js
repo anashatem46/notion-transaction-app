@@ -90,14 +90,7 @@ class ApiService {
      * Create a transaction
      */
     async createTransaction(transactionData) {
-        console.log('API Service - Sending transaction data:', transactionData);
-        try {
-            const result = await this.post(API_ENDPOINTS.TRANSACTION, transactionData);
-            return result;
-        } catch (error) {
-            console.error('API Service - Transaction error:', error);
-            throw error;
-        }
+        return this.post(API_ENDPOINTS.TRANSACTION, transactionData);
     }
 
     /**

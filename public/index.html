@@ -82,9 +82,8 @@
                 const root = ReactDOM.createRoot(document.getElementById('root'));
                 root.render(React.createElement(App.default || App));
             } catch (error) {
-                console.error('Error initializing app:', error);
                 document.getElementById('root').innerHTML = 
-                    '<div class="p-5 text-red-600">Error loading application. Please check console for details.</div>';
+                    '<div class="p-5 text-red-600">Error loading application. Please refresh the page.</div>';
             }
         })();
     </script>

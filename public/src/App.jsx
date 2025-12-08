@@ -183,9 +183,6 @@ function App() {
                 transactionData.category = formData.category.trim();
             }
 
-            // Debug logging
-            console.log('Submitting transaction:', transactionData);
-
             await apiService.createTransaction(transactionData);
 
             showStatus('Transaction saved successfully! ✓', 'success');
@@ -194,8 +191,6 @@ function App() {
             loadBalances();
             loadRecentTransactions();
         } catch (error) {
-            console.error('Transaction submission error:', error);
-            console.error('Error response data:', error.responseData);
             // Show more detailed error message
             let errorMessage = error.message;
             if (error.responseData && error.responseData.details) {

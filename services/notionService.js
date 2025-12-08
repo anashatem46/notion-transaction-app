@@ -236,7 +236,7 @@ async function queryDatabaseWithSort(databaseId, options = {}) {
         return await notion.databases.query(queryOptions);
     } catch (sortError) {
         // If sorting fails, query without sort
-        console.warn(`Sorting failed for ${sortProperty}, fetching without sort:`, sortError.message);
+        // Sorting failed, will fetch without sort
         return await notion.databases.query({
             database_id: databaseId,
             page_size: pageSize || 100

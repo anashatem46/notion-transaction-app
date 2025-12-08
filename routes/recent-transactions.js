@@ -14,10 +14,10 @@ router.get(
         try {
             const limit = parseInt(req.query.limit) || CONFIG.API.DEFAULT_RECENT_TRANSACTIONS_LIMIT;
             const transactions = await transactionService.getRecentTransactions(limit);
-        res.json(transactions);
-    } catch (error) {
+            res.json(transactions);
+        } catch (error) {
             next(error);
-    }
+        }
     }
 );
 

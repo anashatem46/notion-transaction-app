@@ -13,7 +13,7 @@ class LocalStorageService {
             }
             return JSON.parse(item);
         } catch (error) {
-            console.warn(`Error reading from localStorage key "${key}":`, error);
+            // Silently fail and return default value
             return defaultValue;
         }
     }
@@ -26,7 +26,7 @@ class LocalStorageService {
             localStorage.setItem(key, JSON.stringify(value));
             return true;
         } catch (error) {
-            console.warn(`Error writing to localStorage key "${key}":`, error);
+            // Silently fail
             return false;
         }
     }
@@ -52,7 +52,7 @@ class LocalStorageService {
             localStorage.clear();
             return true;
         } catch (error) {
-            console.warn('Error clearing localStorage:', error);
+            // Silently fail
             return false;
         }
     }

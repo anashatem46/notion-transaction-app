@@ -78,7 +78,6 @@
         const moduleOrder = [
             '/public/src/constants/api.js',
             '/public/src/utils/formatters.js',
-            '/public/src/utils/validators.js',
             '/public/src/services/localStorage.js',
             '/public/src/services/api.js',
             '/public/src/components/StatusMessage.jsx',
@@ -112,8 +111,8 @@
                     moduleFn(module, require, exports);
                 });
             } catch (error) {
-                console.error(`Error loading ${modulePath}:`, error);
-                throw error;
+                // Log error but don't expose internal details to user
+                throw new Error(`Failed to load module: ${modulePath.split('/').pop()}`);
             }
         }
     };

@@ -1,7 +1,7 @@
 {
   "name": "notion-transaction-app",
   "version": "1.0.0",
-  "description": "A Node.js + Express application for entering financial transactions into Notion databases with categories and accounts",
+  "description": "A Node.js + Express application with React frontend for entering financial transactions into Notion databases. Features Tailwind CSS styling and scalable architecture.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -58,7 +58,7 @@ async function getAccountBalances() {
                         };
                     }
                 } catch (error) {
-                    console.warn(`Error fetching last transaction for account:`, error.message);
+                    // Silently fail - last transaction is optional
                 }
 
                 const name = notionService.extractTitle(accountPage, accountProperties.title);
@@ -70,7 +70,7 @@ async function getAccountBalances() {
                     lastTransaction: lastTransaction
                 };
             } catch (error) {
-                console.error(`Error processing account:`, error);
+                // Return account with zero balance if processing fails
                 const name = notionService.extractTitle(accountPage, accountProperties.title);
                 return {
                     id: accountPage.id,
