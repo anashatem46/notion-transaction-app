@@ -7,7 +7,7 @@ const logger = require('../middleware/logger');
 router.post(
     '/',
     async (req, res, next) => {
-        try {
+    try {
             // Validate required fields - category is only required for expenses
             const requiredFields = ['name', 'amount', 'type', 'date', 'account'];
             let missingFields = [];
@@ -23,7 +23,7 @@ router.post(
                     const numValue = typeof value === 'number' ? value : parseFloat(value);
                     if (isNaN(numValue) || numValue <= 0) {
                         isValid = false;
-                    }
+            }
                 } else {
                     // For string fields, check if it's not empty after trimming
                     const stringValue = String(value);
@@ -65,7 +65,7 @@ router.post(
             
             if (missingFields.length > 0) {
                 logger.warn('Validation failed. Missing fields:', missingFields);
-                return res.status(400).json({
+                        return res.status(400).json({ 
                     error: 'Missing required fields',
                     details: `The following fields are required: ${missingFields.join(', ')}`,
                     received: {
@@ -76,14 +76,14 @@ router.post(
                         account: req.body.account ? 'provided' : 'missing',
                         category: req.body.category ? 'provided' : 'missing'
                     }
-                });
-            }
-
+            });
+        }
+        
             const result = await transactionService.createTransaction(req.body);
             res.json(result);
         } catch (error) {
             next(error);
-        }
+    }
     }
 );
 

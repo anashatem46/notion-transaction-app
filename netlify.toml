@@ -1,0 +1,70 @@
+[build]
+  # Build command - install dependencies
+  command = "npm install"
+  
+  # Publish directory - Netlify will serve static files from here
+  publish = "public"
+  
+  # Functions directory for serverless functions
+  functions = "netlify/functions"
+
+# Redirect API routes to serverless function
+[[redirects]]
+  from = "/categories"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/accounts"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/transaction"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/balance"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/recent-transactions"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/logout"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/server"
+  status = 200
+
+# Redirect root and all other routes to serverless function (for React app)
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/public/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
