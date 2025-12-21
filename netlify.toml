@@ -9,55 +9,8 @@
   # Functions directory for serverless functions
   functions = "netlify/functions"
 
-# Redirect API routes to serverless function
-[[redirects]]
-  from = "/categories"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[[redirects]]
-  from = "/accounts"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[[redirects]]
-  from = "/transaction"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[[redirects]]
-  from = "/balance"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[[redirects]]
-  from = "/recent-transactions"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[[redirects]]
-  from = "/login"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[[redirects]]
-  from = "/logout"
-  to = "/.netlify/functions/server"
-  status = 200
-
-[[redirects]]
-  from = "/health"
-  to = "/.netlify/functions/server"
-  status = 200
-
-# Redirect root and other routes to serverless function (for React app and authentication)
-# Static files (CSS, JS, etc.) are served automatically by Netlify BEFORE redirects
-# force = false means: only redirect if file doesn't exist (static files exist, so they're served)
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/server"
-  status = 200
-  force = false
+# Note: Redirects are handled by public/_redirects file
+# This allows static files to be served first, then redirects are processed
 
 # Headers for security
 [[headers]]
