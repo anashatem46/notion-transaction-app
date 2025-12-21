@@ -3,6 +3,7 @@
   command = "npm install"
   
   # Publish directory - Netlify will serve static files from here
+  # Files in public/ are served at root / automatically
   publish = "public"
   
   # Functions directory for serverless functions
@@ -49,11 +50,14 @@
   to = "/.netlify/functions/server"
   status = 200
 
-# Redirect root and all other routes to serverless function (for React app)
+# Redirect root and other routes to serverless function (for React app and authentication)
+# Static files (CSS, JS, etc.) are served automatically by Netlify BEFORE redirects
+# force = false means: only redirect if file doesn't exist (static files exist, so they're served)
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/server"
   status = 200
+  force = false
 
 # Headers for security
 [[headers]]
@@ -65,6 +69,6 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
 
 [[headers]]
-  for = "/public/*"
+  for = "/src/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"

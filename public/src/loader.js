@@ -76,16 +76,16 @@
 
     window.loadModules = async function() {
         const moduleOrder = [
-            '/public/src/constants/api.js',
-            '/public/src/utils/formatters.js',
-            '/public/src/services/localStorage.js',
-            '/public/src/services/api.js',
-            '/public/src/components/StatusMessage.jsx',
-            '/public/src/components/AccountTabs.jsx',
-            '/public/src/components/AccountModal.jsx',
-            '/public/src/components/RecentActivity.jsx',
-            '/public/src/components/TransactionForm.jsx',
-            '/public/src/App.jsx'
+            '/src/constants/api.js',
+            '/src/utils/formatters.js',
+            '/src/services/localStorage.js',
+            '/src/services/api.js',
+            '/src/components/StatusMessage.jsx',
+            '/src/components/AccountTabs.jsx',
+            '/src/components/AccountModal.jsx',
+            '/src/components/RecentActivity.jsx',
+            '/src/components/TransactionForm.jsx',
+            '/src/App.jsx'
         ];
 
         for (const modulePath of moduleOrder) {

@@ -27,7 +27,7 @@
     </script>
     
     <!-- Custom Tailwind Colors and Animations -->
-    <link rel="stylesheet" href="/public/src/tailwind-custom.css">
+    <link rel="stylesheet" href="/src/tailwind-custom.css">
     
     <style>
         /* Global resets */
@@ -71,19 +71,20 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <!-- Module loader -->
-    <script src="/public/src/loader.js"></script>
+    <script src="/src/loader.js"></script>
 
     <!-- Initialize app -->
     <script type="text/babel">
         (async function() {
             try {
                 await window.loadModules();
-                const App = window.require('/public/src/App.jsx');
+                const App = window.require('/src/App.jsx');
                 const root = ReactDOM.createRoot(document.getElementById('root'));
                 root.render(React.createElement(App.default || App));
             } catch (error) {
+                console.error('Error loading application:', error);
                 document.getElementById('root').innerHTML = 
-                    '<div class="p-5 text-red-600">Error loading application. Please refresh the page.</div>';
+                    '<div class="p-5 text-red-600">Error loading application. Please check console for details.</div>';
             }
         })();
     </script>
