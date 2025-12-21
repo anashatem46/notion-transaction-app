@@ -1,3 +1,7 @@
+# Netlify redirects file
+# IMPORTANT: Static files are served FIRST, then redirects are processed
+# Files in public/ are served at root / automatically
+
 # API routes - redirect to serverless function
 /categories /.netlify/functions/server 200
 /accounts /.netlify/functions/server 200
@@ -8,8 +12,6 @@
 /logout /.netlify/functions/server 200
 /health /.netlify/functions/server 200
 
-# Root route - redirect to serverless function (for React app)
-/ /.netlify/functions/server 200
-
-# Note: Static files (CSS, JS, etc.) are served automatically by Netlify
-# and won't match these redirects, so they'll be served directly
+# All other routes - redirect to serverless function (for React app)
+# Note: Static files (like /src/*.js, /src/*.css) are served BEFORE this redirect
+/* /.netlify/functions/server 200

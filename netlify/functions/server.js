@@ -54,9 +54,19 @@ app.use(session({
 // Public routes
 app.use('/login', authRoutes);
 
-// Serve static files from public directory (for fallback)
-// In Netlify, static files are served directly, but this handles cases where they're requested through the function
-app.use('/src', express.static(path.join(__dirname, '../../public/src')));
+// Serve static files from public directory
+// This is a fallback - Netlify should serve static files directly, but if they come through the function, serve them here
+// IMPORTANT: Serve static files BEFORE authentication middleware so they're accessible
+app.use('/src', express.static(path.join(__dirname, '../../public/src'), {
+    setHeaders: (res, path) => {
+        // Set proper content types
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        } else if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+    }
+}));
 app.use('/public', express.static(path.join(__dirname, '../../public')));
 
 // Protected static content - serve index.html
