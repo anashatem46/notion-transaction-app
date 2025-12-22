@@ -67,6 +67,16 @@ app.use('/src', express.static(path.join(__dirname, '../../public/src'), {
         }
     }
 }));
+// Also support /public/src for backward compatibility (in case HTML is cached)
+app.use('/public/src', express.static(path.join(__dirname, '../../public/src'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        } else if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+    }
+}));
 app.use('/public', express.static(path.join(__dirname, '../../public')));
 
 // Protected static content - serve index.html

@@ -84,3 +84,4 @@ But this is not recommended for production.
 2. Verify all environment variables are set
 3. Test locally first: `npm start` and verify paths work
 4. Check browser console for specific error messages
+
