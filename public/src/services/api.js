@@ -5,18 +5,32 @@ const { API_ENDPOINTS } = require('../constants/api');
  */
 class ApiService {
     /**
+     * Handle 401 unauthorized - redirect to login
+     */
+    handleUnauthorized() {
+        window.location.href = '/login';
+    }
+
+    /**
      * Make a GET request
      */
     async get(endpoint, options = {}) {
         try {
             const response = await fetch(endpoint, {
                 method: 'GET',
+                credentials: 'include', // Send cookies with request
                 headers: {
                     'Content-Type': 'application/json',
                     ...options.headers
                 },
                 ...options
             });
+
+            // Handle 401 - redirect to login
+            if (response.status === 401) {
+                this.handleUnauthorized();
+                throw new Error('Unauthorized - redirecting to login');
+            }
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ error: 'Request failed' }));
@@ -36,6 +50,7 @@ class ApiService {
         try {
             const response = await fetch(endpoint, {
                 method: 'POST',
+                credentials: 'include', // Send cookies with request
                 headers: {
                     'Content-Type': 'application/json',
                     ...options.headers
@@ -43,6 +58,12 @@ class ApiService {
                 body: JSON.stringify(data),
                 ...options
             });
+
+            // Handle 401 - redirect to login
+            if (response.status === 401) {
+                this.handleUnauthorized();
+                throw new Error('Unauthorized - redirecting to login');
+            }
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ error: 'Request failed' }));

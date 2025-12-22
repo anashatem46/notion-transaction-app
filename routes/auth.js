@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const router = express.Router();
 const { verifyCredentials, redirectIfAuthenticated } = require('../middleware/auth');
 const logger = require('../middleware/logger');
@@ -8,7 +9,9 @@ const APP_PASSWORD_HASH = process.env.APP_PASSWORD_HASH;
 
 // GET /login - Show login page
 router.get('/', redirectIfAuthenticated, (req, res) => {
-    return res.sendFile('login.html', { root: 'public' });
+    // Use absolute path that works in both local and serverless environments
+    const loginPath = path.join(__dirname, '../public', 'login.html');
+    return res.sendFile(loginPath);
 });
 
 // POST /login - Handle login

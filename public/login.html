@@ -120,6 +120,7 @@
             try {
                 const response = await fetch('/login', {
                     method: 'POST',
+                    credentials: 'include', // Important: send/receive cookies
                     headers: {
                         'Content-Type': 'application/json'
                     },
