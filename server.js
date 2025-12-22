@@ -60,6 +60,10 @@ app.use(session({
 // Public routes
 app.use('/login', authRoutes);
 
+// Serve static files from /src path (public, no auth required)
+// These are needed to load the React app before authentication
+app.use('/src', express.static(path.join(__dirname, 'public', 'src')));
+
 // Protected static content
 app.get('/', requireAuth, (req, res) => {
     return res.sendFile(path.join(__dirname, 'public', 'index.html'));
