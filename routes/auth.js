@@ -36,18 +36,12 @@ router.post('/', async (req, res) => {
 
 // Logout handler function (exported for use in server.js)
 function handleLogout(req, res) {
-    if (!req.session) {
-        return res.json({ success: true });
-    }
-
-    req.session.destroy(err => {
-        if (err) {
-            logger.error('Error destroying session:', err);
-            return res.status(500).json({ error: 'Failed to log out' });
-        }
-        res.clearCookie('notion_session');
-        return res.json({ success: true });
-    });
+    const { CONFIG } = require('../constants/config');
+    
+    // For cookie-session, set session to null instead of destroy()
+    req.session = null;
+    res.clearCookie(CONFIG.SESSION.NAME);
+    return res.json({ success: true });
 }
 
 // POST /logout - Handle logout (for router use)

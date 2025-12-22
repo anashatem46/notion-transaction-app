@@ -35,13 +35,14 @@ app.set('trust proxy', 1);
 app.use(logger.requestLogger);
 
 // Cookie-session configuration (works in serverless - stores session in cookie)
+const { CONFIG } = require('../../constants/config');
 app.use(cookieSession({
-    name: 'session',
+    name: CONFIG.SESSION.NAME, // 'notion_session'
     keys: [SESSION_SECRET || 'fallback-secret-key'],
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxAge: CONFIG.SESSION.MAX_AGE,
     secure: true, // Always secure on Netlify (HTTPS)
-    httpOnly: true,
-    sameSite: 'lax'
+    httpOnly: CONFIG.SESSION.HTTP_ONLY,
+    sameSite: CONFIG.SESSION.SAME_SITE
 }));
 
 // Public routes
