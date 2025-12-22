@@ -1,17 +1,24 @@
 # Netlify redirects file
-# IMPORTANT: Static files are served FIRST, then redirects are processed
-# Files in public/ are served at root / automatically
+# Static files in /src/ are served automatically by Netlify CDN
 
 # API routes - redirect to serverless function
 /categories /.netlify/functions/server 200
+/categories/* /.netlify/functions/server 200
 /accounts /.netlify/functions/server 200
+/accounts/* /.netlify/functions/server 200
 /transaction /.netlify/functions/server 200
+/transaction/* /.netlify/functions/server 200
 /balance /.netlify/functions/server 200
+/balance/* /.netlify/functions/server 200
 /recent-transactions /.netlify/functions/server 200
+/recent-transactions/* /.netlify/functions/server 200
 /login /.netlify/functions/server 200
+/login/* /.netlify/functions/server 200
 /logout /.netlify/functions/server 200
 /health /.netlify/functions/server 200
 
-# All other routes - redirect to serverless function (for React app)
-# Note: Static files (like /src/*.js, /src/*.css) are served BEFORE this redirect
-/* /.netlify/functions/server 200
+# Root route - redirect to serverless function for authentication
+/ /.netlify/functions/server 200
+
+# DO NOT add catch-all /* redirect - it blocks static files
+# Static files like /src/loader.js are served automatically by Netlify CDN
