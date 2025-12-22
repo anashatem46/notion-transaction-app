@@ -1,7 +1,7 @@
 const serverless = require('serverless-http');
 const express = require('express');
 const path = require('path');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 require('dotenv').config();
 
 // Import the Express app setup
@@ -20,12 +20,9 @@ const healthRoutes = require('../../routes/health');
 const { requireAuth } = require('../../middleware/auth');
 const logger = require('../../middleware/logger');
 const errorHandler = require('../../middleware/errorHandler');
-const { CONFIG } = require('../../constants/config');
 
 // Environment variables
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const APP_USERNAME = process.env.APP_USERNAME;
-const APP_PASSWORD_HASH = process.env.APP_PASSWORD_HASH;
 
 // Middleware
 app.use(express.json());
@@ -37,46 +34,31 @@ app.set('trust proxy', 1);
 // Request logging
 app.use(logger.requestLogger);
 
-// Session configuration
-app.use(session({
-    name: CONFIG.SESSION.NAME,
-    secret: SESSION_SECRET || 'fallback-secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: CONFIG.SESSION.HTTP_ONLY,
-        secure: true, // Always secure on Netlify (HTTPS)
-        sameSite: CONFIG.SESSION.SAME_SITE,
-        maxAge: CONFIG.SESSION.MAX_AGE
-    }
+// Cookie-session configuration (works in serverless - stores session in cookie)
+app.use(cookieSession({
+    name: 'session',
+    keys: [SESSION_SECRET || 'fallback-secret-key'],
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: true, // Always secure on Netlify (HTTPS)
+    httpOnly: true,
+    sameSite: 'lax'
 }));
 
 // Public routes
 app.use('/login', authRoutes);
 
 // Serve static files from public directory
-// This is a fallback - Netlify should serve static files directly, but if they come through the function, serve them here
-// IMPORTANT: Serve static files BEFORE authentication middleware so they're accessible
+// This is a fallback - Netlify should serve static files directly
 app.use('/src', express.static(path.join(__dirname, '../../public/src'), {
-    setHeaders: (res, path) => {
-        // Set proper content types
-        if (path.endsWith('.js')) {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.js')) {
             res.setHeader('Content-Type', 'application/javascript');
-        } else if (path.endsWith('.css')) {
+        } else if (filePath.endsWith('.css')) {
             res.setHeader('Content-Type', 'text/css');
         }
     }
 }));
-// Also support /public/src for backward compatibility (in case HTML is cached)
-app.use('/public/src', express.static(path.join(__dirname, '../../public/src'), {
-    setHeaders: (res, path) => {
-        if (path.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-        } else if (path.endsWith('.css')) {
-            res.setHeader('Content-Type', 'text/css');
-        }
-    }
-}));
+app.use('/public/src', express.static(path.join(__dirname, '../../public/src')));
 app.use('/public', express.static(path.join(__dirname, '../../public')));
 
 // Protected static content - serve index.html
