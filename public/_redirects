@@ -3,8 +3,10 @@
 
 # Serve static files directly (these rules prevent redirect to function)
 /src/* /src/:splat 200
-/index.html /index.html 200
-/login.html /login.html 200
+
+# Root and login routes go to serverless function for authentication
+/ /.netlify/functions/server 200
+/login /.netlify/functions/server 200
 
 # All other routes go to serverless function
 /* /.netlify/functions/server 200
