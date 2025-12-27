@@ -50,8 +50,5 @@ function handleLogout(req, res) {
     });
 }
 
-// POST /logout - Handle logout (for router use)
-router.post('/logout', handleLogout);
-
 module.exports = router;
 module.exports.handleLogout = handleLogout;
