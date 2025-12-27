@@ -27,8 +27,12 @@ const APP_USERNAME = process.env.APP_USERNAME;
 const APP_PASSWORD_HASH = process.env.APP_PASSWORD_HASH;
 
 // Validate required environment variables
-if (!SESSION_SECRET || !APP_USERNAME || !APP_PASSWORD_HASH) {
-    logger.warn('⚠️  SESSION_SECRET, APP_USERNAME, and APP_PASSWORD_HASH must be set in the environment.');
+if (process.env.NODE_ENV === 'production') {
+    if (!SESSION_SECRET || !APP_USERNAME || !APP_PASSWORD_HASH) {
+        throw new Error('SESSION_SECRET, APP_USERNAME, and APP_PASSWORD_HASH must be set in production.');
+    }
+} else if (!SESSION_SECRET || !APP_USERNAME || !APP_PASSWORD_HASH) {
+    logger.warn('⚠️  SESSION_SECRET, APP_USERNAME, and APP_PASSWORD_HASH are not fully set. Using fallback for local dev.');
 }
 
 // Middleware
