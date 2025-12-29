@@ -190,6 +190,7 @@ function App() {
             // Reload data
             loadBalances();
             loadRecentTransactions();
+            return true;
         } catch (error) {
             console.error('Transaction submission error:', error);
             console.error('Error response data:', error.responseData);
@@ -201,6 +202,7 @@ function App() {
                 errorMessage = error.responseData.error;
             }
             showStatus(`Error: ${errorMessage}`, 'error');
+            return false;
         } finally {
             setIsLoading(false);
         }

@@ -28,9 +28,22 @@ function TransactionForm({
         });
     };
 
-    const handleSubmit = (e) => {
+    const initialState = React.useMemo(() => ({
+        name: '',
+        amount: '',
+        type: 'Expense',
+        date: getTodayDate(),
+        account: '',
+        category: '',
+        note: ''
+    }), []);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        const success = await onSubmit(formData);
+        if (success) {
+            setFormData(initialState);
+        }
     };
 
     return React.createElement('form', {
