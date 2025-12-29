@@ -23,41 +23,34 @@ async function createTransaction(transactionData) {
     const isIncome = transactionType === 'income' || transactionType.includes('income');
     const isExpense = (transactionType === 'expense' || transactionType.includes('expense')) && !isIncome;
     
-    console.log('Service validation - Transaction type check:', {
-        originalType: type,
-        normalizedType: transactionType,
-        isIncome: isIncome,
-        isExpense: isExpense,
-        categoryProvided: !!category,
-        categoryValue: category
-    });
+    // Validation is handled here; avoid noisy console logs in production
     
     // ONLY require category for expenses (not for income)
     // If it's income, NEVER require category - skip validation entirely
     if (isIncome) {
         // Income transactions - category is always optional
-        console.log('Service: Income transaction detected - category is optional, skipping validation');
+        // Income transaction: category is optional
     } else if (isExpense) {
         // Expense transactions - category is required
         if (!category || (typeof category === 'string' && category.trim() === '')) {
             missingFields.push('category');
-            console.log('Service: Missing category for expense transaction');
+            // Expense transaction: category missing
         } else {
-            console.log('Service: Category provided for expense transaction');
+            // Expense transaction: category provided
         }
     } else {
         // Unknown transaction type - category is optional
-        console.log('Service: Unknown transaction type - category is optional, skipping validation');
+        // Unknown type: treat category as optional
     }
 
     // Final safeguard: if it's income, remove category from missingFields if it's there
     if (isIncome && missingFields.includes('category')) {
-        console.log('Service: Removing category from missingFields for income transaction');
+        // Ensure category is not required for income
         missingFields = missingFields.filter(field => field !== 'category');
     }
     
     if (missingFields.length > 0) {
-        console.log('Service: Validation failed with missing fields:', missingFields);
+        // Bubble up validation errors with details
         throw {
             code: 'VALIDATION_ERROR',
             ...ERROR_MESSAGES.MISSING_REQUIRED_FIELDS(missingFields)

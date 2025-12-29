@@ -183,9 +183,6 @@ function App() {
                 transactionData.category = formData.category.trim();
             }
 
-            // Debug logging
-            console.log('Submitting transaction:', transactionData);
-
             await apiService.createTransaction(transactionData);
 
             showStatus('Transaction saved successfully! ✓', 'success');
