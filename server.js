@@ -84,8 +84,9 @@ app.post('/logout', requireAuth, (req, res) => {
 app.use('/health', healthRoutes);
 
 // Silence favicon 404 noise
-app.get('/favicon.ico', (req, res) => res.status(204).end());
-
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'assets', 'fav', 'favicon.ico'));
+});
 // Error handling middleware (must be last)
 app.use(errorHandler);
 

@@ -1,72 +1,84 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Transaction</title>
-    
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/fav/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/fav/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/fav/favicon-16x16.png" />
+    <link rel="shortcut icon" href="/assets/fav/favicon.ico" />
+    <link rel="manifest" href="/site.webmanifest" />
     <!-- Tailwind CSS CDN with custom configuration -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            DEFAULT: '#1B3C53',
-                            dark: '#0f2635',
-                            light: '#234C6A',
-                        },
-                        secondary: '#234C6A',
-                        accent: '#456882',
-                        'light-gray': '#E3E3E3',
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: "#1B3C53",
+                dark: "#0f2635",
+                light: "#234C6A",
+              },
+              secondary: "#234C6A",
+              accent: "#456882",
+              "light-gray": "#E3E3E3",
+            },
+          },
+        },
+      };
     </script>
-    
-    <!-- Custom Tailwind Colors and Animations -->
-    <link rel="stylesheet" href="/public/src/tailwind-custom.css">
-    
-    <style>
-        /* Global resets */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #E3E3E3 !important;
-        }
-        
-        /* Ensure custom colors work */
-        .bg-primary {
-            background-color: #1B3C53 !important;
-        }
-        
-        .bg-primary-light {
-            background-color: #234C6A !important;
-        }
-        
-        .bg-light-gray {
-            background-color: #E3E3E3 !important;
-        }
-        
-        .hover\:bg-primary-light:hover {
-            background-color: #234C6A !important;
-        }
+    <!-- Custom Tailwind Colors and Animations -->
+    <link rel="stylesheet" href="/public/src/tailwind-custom.css" />
+
+    <style>
+      /* Global resets */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        background-color: #e3e3e3 !important;
+      }
+
+      /* Ensure custom colors work */
+      .bg-primary {
+        background-color: #1b3c53 !important;
+      }
+
+      .bg-primary-light {
+        background-color: #234c6a !important;
+      }
+
+      .bg-light-gray {
+        background-color: #e3e3e3 !important;
+      }
+
+      .hover\:bg-primary-light:hover {
+        background-color: #234c6a !important;
+      }
     </style>
-</head>
-<body class="bg-light-gray min-h-screen p-5 flex justify-center items-center">
+  </head>
+  <body class="bg-light-gray min-h-screen p-5 flex justify-center items-center">
     <div id="root"></div>
 
     <!-- React and ReactDOM from CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+
     <!-- Babel Standalone for JSX transformation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
@@ -75,18 +87,18 @@
 
     <!-- Initialize app -->
     <script type="text/babel">
-        (async function() {
-            try {
-                await window.loadModules();
-                const App = window.require('/public/src/App.jsx');
-                const root = ReactDOM.createRoot(document.getElementById('root'));
-                root.render(React.createElement(App.default || App));
-            } catch (error) {
-                console.error('Error initializing app:', error);
-                document.getElementById('root').innerHTML = 
-                    '<div class="p-5 text-red-600">Error loading application. Please check console for details.</div>';
-            }
-        })();
+      (async function () {
+        try {
+          await window.loadModules();
+          const App = window.require("/public/src/App.jsx");
+          const root = ReactDOM.createRoot(document.getElementById("root"));
+          root.render(React.createElement(App.default || App));
+        } catch (error) {
+          console.error("Error initializing app:", error);
+          document.getElementById("root").innerHTML =
+            '<div class="p-5 text-red-600">Error loading application. Please check console for details.</div>';
+        }
+      })();
     </script>
-</body>
+  </body>
 </html>
